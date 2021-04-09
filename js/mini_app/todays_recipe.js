@@ -2,6 +2,8 @@
 
 {
     function init() {
+        addEventListener_todays_recipe_reload();
+
         todays_recipe_reload();
     }
 
@@ -93,13 +95,17 @@
         ["ヘルシーおかず",1643],
     ];
     
-    function todays_recipe_reload() {
+    function addEventListener_todays_recipe_reload() {
         const btn = document.getElementById('btn');
 
         btn.addEventListener('click', () => {
-            const todays_recipes = create_todays_recipes();
-            set_todays_recipes(todays_recipes);
+            todays_recipe_reload();
         });
+    }
+
+    function todays_recipe_reload() {
+        const todays_recipes = create_todays_recipes();
+        set_todays_recipes(todays_recipes);
     }
 
     function create_todays_recipes() {
