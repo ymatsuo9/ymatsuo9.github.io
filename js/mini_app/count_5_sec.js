@@ -45,6 +45,12 @@
         btn.textContent = 'start';
     }
 
+    function initTimer() {
+        timer.textContent = '05.000';
+    }
+
+    initTimer();
+
     btn.addEventListener('click', () => {
         if (btn.classList.contains('start')) {
             start_to_stop();
@@ -63,7 +69,7 @@
             result.textContent = timer.textContent;
             results.insertBefore(result, results.firstChild);
 
-            timer.textContent = '';
+            initTimer();
         }
     });
 }
