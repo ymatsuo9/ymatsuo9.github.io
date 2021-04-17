@@ -17,12 +17,33 @@
 }
 
 .cell {
-    width: 24px;
-    height: 24px;
+    width: 27px;
+    height: 27px;
     padding: 0;
     border-radius: 4px;
     text-align: center;
     user-select: none;
+}
+
+@media (min-width: 400px) {
+    .cell {
+        width: 36px;
+        height: 36px;
+    }
+}
+
+@media (min-width: 500px) {
+    .cell {
+        width: 45px;
+        height: 45px;
+    }
+}
+
+@media (min-width: 600px) {
+    .cell {
+        width: 54px;
+        height: 54px;
+    }
 }
 
 .closed {
