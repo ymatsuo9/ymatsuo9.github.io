@@ -19,6 +19,7 @@
 .cell {
     width: 27px;
     height: 27px;
+    line-height: 27px;
     padding: 0;
     border-radius: 4px;
     text-align: center;
@@ -29,6 +30,7 @@
     .cell {
         width: 36px;
         height: 36px;
+        line-height: 36px;
     }
 }
 
@@ -36,6 +38,7 @@
     .cell {
         width: 45px;
         height: 45px;
+        line-height: 45px;
     }
 }
 
@@ -43,6 +46,7 @@
     .cell {
         width: 54px;
         height: 54px;
+        line-height: 54px;
     }
 }
 
