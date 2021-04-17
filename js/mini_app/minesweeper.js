@@ -6,6 +6,8 @@
     const mine_num = 10;
     const safe_num = area_height * area_width - mine_num;
 
+    const mine_str = 'X';
+
     let cells;
     let is_game_over = false;
     let opened_cell_count = 0;
@@ -103,7 +105,7 @@
     }
 
     function click_event_mine(cell) {
-        cell.textContent = 'X';
+        cell.textContent = mine_str
         cell.classList.add('mine-opened');
 
         document.getElementById('message').textContent = 'Game over';
@@ -112,6 +114,19 @@
     }
 
     function click_event_game_clear() {
+        let main = document.getElementById('main');
+        for (let y = 0; y < area_height; y++) {
+            for (let x = 0; x < area_width; x++) {
+                let cell = main.children[y].children[x];
+                if (cell.classList.contains('closed') && 
+                    cell.classList.contains('mine')) {
+                        cell.classList.remove('closed');
+                        cell.classList.add('safe-opened');
+                        cell.textContent = mine_str;
+                }
+            }
+        }
+
         document.getElementById('message').textContent = 'Congraturations!';
         is_game_over = true;
         document.getElementById('btn').classList.remove('playing');
