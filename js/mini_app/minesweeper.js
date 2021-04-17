@@ -127,7 +127,7 @@
             }
         }
 
-        document.getElementById('message').textContent = 'Congraturations!';
+        document.getElementById('message').textContent = 'Congratulations!';
         is_game_over = true;
         document.getElementById('btn').classList.remove('playing');
     }
