@@ -176,7 +176,7 @@
     function click_event(cell) {
         if (is_game_over) {
             return;
-        } else if (cell.classList.contains('opened')) {
+        } else if (!cell.classList.contains('closed')) {
             return;
         }
 
