@@ -2,9 +2,9 @@
 
 {
     function init() {
-        addEventListener_todays_recipe_reload();
+        addEventListener_todaysRecipeReload();
 
-        todays_recipe_reload();
+        todaysRecipeReload();
     }
 
     const recipes = [
@@ -95,47 +95,47 @@
         ["ヘルシーおかず",1643],
     ];
     
-    function addEventListener_todays_recipe_reload() {
+    function addEventListener_todaysRecipeReload() {
         const btn = document.getElementById('btn');
 
         btn.addEventListener('click', () => {
-            todays_recipe_reload();
+            todaysRecipeReload();
         });
     }
 
-    function todays_recipe_reload() {
-        const todays_recipes = create_todays_recipes();
-        set_todays_recipes(todays_recipes);
+    function todaysRecipeReload() {
+        const todaysRecipes = createTodaysRecipes();
+        setTodaysRecipes(todaysRecipes);
     }
 
-    function create_todays_recipes() {
+    function createTodaysRecipes() {
         const recipe_indexes = [];
         for (let i = 0; i < recipes.length; i++) {
             recipe_indexes[i] = i;
         }
 
-        const todays_recipes = [];
+        const todaysRecipes = [];
         for (let i = 0; i < 3; i++) {
             const recipe_index = recipe_indexes.splice(Math.floor(Math.random() * recipe_indexes.length), 1)[0];
-            todays_recipes[i] = recipes[recipe_index];
+            todaysRecipes[i] = recipes[recipe_index];
         }
 
-        return todays_recipes;
+        return todaysRecipes;
     }
 
-    function set_todays_recipes(todays_recipes) {
+    function setTodaysRecipes(todaysRecipes) {
         const parent = document.getElementById('todays_recipes');
 
         while (parent.firstChild) {
             parent.removeChild(parent.firstChild);
         }
 
-        for (let i = 0; i < todays_recipes.length; i++) {
+        for (let i = 0; i < todaysRecipes.length; i++) {
             const child_div = document.createElement('div');
 
             const child_link = document.createElement('a');
-            child_link.textContent = todays_recipes[i][0];
-            child_link.href = 'https://cookpad.com/category/' + todays_recipes[i][1];
+            child_link.textContent = todaysRecipes[i][0];
+            child_link.href = 'https://cookpad.com/category/' + todaysRecipes[i][1];
             child_link.setAttribute('target', '_blank');
 
             child_div.appendChild(child_link);

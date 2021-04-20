@@ -1,69 +1,69 @@
 'use strict'
 
 {
-    const area_height = 9;
-    const area_width = 9;
-    const mine_num = 10;
-    const safe_num = area_height * area_width - mine_num;
+    const areaHeight = 9;
+    const areaWidth = 9;
+    const mineNum = 10;
+    const safeNum = areaHeight * areaWidth - mineNum;
 
-    const mine_str = 'X';
+    const mineStr = 'X';
 
     let cells;
-    let is_game_over = false;
-    let opened_cell_count = 0;
+    let isGameOver = false;
+    let openedCellCount = 0;
 
     function init() {
-        create_new_game();
+        createNewGame();
 
         document.getElementById('btn').addEventListener('click', () => {
-            create_new_game();
+            createNewGame();
         });
     }
 
     class cell {
-        constructor(x, y, is_mine, count) {
+        constructor(x, y, isMine, count) {
             this.x = x;
             this.y = y;
-            this.is_mine = is_mine;
+            this.isMine = isMine;
             this.count = count;
         }
     }
 
-    function create_mine_indexes() {
-        let indexes = [...Array(area_height * area_width).keys()];
-        let mine_indexes = [];
-        for (let i = 0; i < mine_num; i++) {
-            mine_indexes.push(indexes.splice(Math.floor(Math.random() * indexes.length), 1)[0]);
+    function createMineIndexes() {
+        let indexes = [...Array(areaHeight * areaWidth).keys()];
+        let mineIndexes = [];
+        for (let i = 0; i < mineNum; i++) {
+            mineIndexes.push(indexes.splice(Math.floor(Math.random() * indexes.length), 1)[0]);
         }
-        return mine_indexes;
+        return mineIndexes;
     }
 
-    function craete_cells_sub1(mine_indexes) {
+    function craeteCellsSub1(mineIndexes) {
         let cells = [];
-        for (let y = 0; y < area_height; y++) {
+        for (let y = 0; y < areaHeight; y++) {
             const row = [];
-            for (let x = 0; x < area_width; x++) {
-                let is_mine = mine_indexes.includes(x + y * area_width);
-                row.push(new cell(x, y, is_mine, 0));
+            for (let x = 0; x < areaWidth; x++) {
+                let isMine = mineIndexes.includes(x + y * areaWidth);
+                row.push(new cell(x, y, isMine, 0));
             }
             cells.push(row);
         }
         return cells;
     }
 
-    function create_cells_sub2(cells) {
-        for (let y = 0; y < area_height; y++) {
-            for (let x = 0; x < area_width; x++) {
-                if (!cells[y][x].is_mine) {
+    function createCellsSub2(cells) {
+        for (let y = 0; y < areaHeight; y++) {
+            for (let x = 0; x < areaWidth; x++) {
+                if (!cells[y][x].isMine) {
                     continue;
                 }
     
-                craete_cells_sub3(cells, x, y);
+                craeteCellsSub3(cells, x, y);
             }
         }
     }
 
-    function craete_cells_sub3(cells, x, y) {
+    function craeteCellsSub3(cells, x, y) {
         if (y !== 0) {
             if (x !== 0) {
                 cells[y - 1][x - 1].count++;
@@ -71,7 +71,7 @@
 
             cells[y - 1][x].count++;
 
-            if (x !== (area_width - 1)) {
+            if (x !== (areaWidth - 1)) {
                 cells[y - 1][x + 1].count++;
             }
         }
@@ -80,101 +80,101 @@
             cells[y][x - 1].count++;
         }
 
-        if (x !== (area_width - 1)) {
+        if (x !== (areaWidth - 1)) {
             cells[y][x + 1].count++;
         }
 
-        if (y !== (area_height - 1)) {
+        if (y !== (areaHeight - 1)) {
             if (x !== 0) {
                 cells[y + 1][x - 1].count++;
             }
 
             cells[y + 1][x].count++;
 
-            if (x !== (area_width - 1)) {
+            if (x !== (areaWidth - 1)) {
                 cells[y + 1][x + 1].count++;
             }
         }
     }
 
-    function create_cells() {
-        let mine_indexes = create_mine_indexes();
-        let cells = craete_cells_sub1(mine_indexes);
-        create_cells_sub2(cells);
+    function createCells() {
+        let mineIndexes = createMineIndexes();
+        let cells = craeteCellsSub1(mineIndexes);
+        createCellsSub2(cells);
         return cells;
     }
 
-    function click_event_mine(cell) {
-        cell.textContent = mine_str
+    function clickEventMine(cell) {
+        cell.textContent = mineStr
         cell.classList.add('mine-opened');
 
         document.getElementById('message').textContent = 'Game over';
-        is_game_over = true;
+        isGameOver = true;
         document.getElementById('btn').classList.remove('playing');
     }
 
-    function click_event_game_clear() {
+    function clickEventGameClear() {
         let main = document.getElementById('main');
-        for (let y = 0; y < area_height; y++) {
-            for (let x = 0; x < area_width; x++) {
+        for (let y = 0; y < areaHeight; y++) {
+            for (let x = 0; x < areaWidth; x++) {
                 let cell = main.children[y].children[x];
                 if (cell.classList.contains('closed') && 
                     cell.classList.contains('mine')) {
                         cell.classList.remove('closed');
                         cell.classList.add('safe-opened');
-                        cell.textContent = mine_str;
+                        cell.textContent = mineStr;
                 }
             }
         }
 
         document.getElementById('message').textContent = 'Congratulations!';
-        is_game_over = true;
+        isGameOver = true;
         document.getElementById('btn').classList.remove('playing');
     }
 
-    function open_panel(x, y) {
+    function openPanel(x, y) {
         const cell = document.getElementById('main').children[y].children[x]
         if (cell.classList.contains('closed')) {
             cell.click();
         }
     }
 
-    function open_neighbor_panels(x, y) {
+    function openNeighborPanels(x, y) {
         if (y !== 0) {
             if (x !== 0) {
-                open_panel(x - 1, y - 1);
+                openPanel(x - 1, y - 1);
             }
 
-            open_panel(x, y - 1);
+            openPanel(x, y - 1);
 
-            if (x !== (area_width - 1)) {
-                open_panel(x + 1, y - 1);
+            if (x !== (areaWidth - 1)) {
+                openPanel(x + 1, y - 1);
             }
         }
 
         if (x !== 0) {
-            open_panel(x - 1, y);
+            openPanel(x - 1, y);
         }
 
-        if (x !== (area_width - 1)) {
-            open_panel(x + 1, y);
+        if (x !== (areaWidth - 1)) {
+            openPanel(x + 1, y);
         }
 
-        if (y !== (area_height - 1)) {
+        if (y !== (areaHeight - 1)) {
             if (x !== 0) {
-                open_panel(x - 1, y + 1);
+                openPanel(x - 1, y + 1);
             }
 
-            open_panel(x, y + 1);
+            openPanel(x, y + 1);
 
-            if (x !== (area_width - 1)) {
-                open_panel(x + 1, y + 1);
+            if (x !== (areaWidth - 1)) {
+                openPanel(x + 1, y + 1);
             }
         }
     }
 
-    function click_event(cell) {
-        if (is_game_over) {
+    function clickEvent(cell) {
+        if (isGameOver) {
             return;
         } else if (!cell.classList.contains('closed')) {
             return;
@@ -183,39 +183,39 @@
         cell.classList.remove('closed');
 
         if (cell.classList.contains('mine')) {
-            click_event_mine(cell);
+            clickEventMine(cell);
             return;
         }
         
         cell.classList.add('safe-opened');
-        opened_cell_count++;
+        openedCellCount++;
         if (cell.getAttribute('count') !== '0') {
             cell.textContent = cell.getAttribute('count');
         }
 
-        if (safe_num === opened_cell_count) {
-            click_event_game_clear();
+        if (safeNum === openedCellCount) {
+            clickEventGameClear();
             return;
         }
 
         if (cell.getAttribute('count') === '0') {
-            open_neighbor_panels(Number(cell.getAttribute('x')), Number(cell.getAttribute('y')));
+            openNeighborPanels(Number(cell.getAttribute('x')), Number(cell.getAttribute('y')));
         }
     }
 
-    function create_main_contents() {
-        cells = create_cells();
+    function createMainContents() {
+        cells = createCells();
 
         const main = document.getElementById('main');
         while (main.firstChild) {
             main.removeChild(main.firstChild);
         }
 
-        for (let hi = 0; hi < area_height; hi++) {
+        for (let hi = 0; hi < areaHeight; hi++) {
             const row = document.createElement('div');
             row.classList.add('row');
 
-            for (let wi = 0; wi < area_width; wi++) {
+            for (let wi = 0; wi < areaWidth; wi++) {
                 const cell = document.createElement('div');
                 cell.classList.add('cell');
                 cell.classList.add('closed');
@@ -223,14 +223,14 @@
                 cell.setAttribute('x', cells[hi][wi].x);
                 cell.setAttribute('y', cells[hi][wi].y);
 
-                if (cells[hi][wi].is_mine) {
+                if (cells[hi][wi].isMine) {
                     cell.classList.add('mine');
                 } else {
                     cell.setAttribute('count', cells[hi][wi].count);
                 }
 
                 cell.addEventListener('click', () => {
-                    click_event(cell);
+                    clickEvent(cell);
                 });
 
                 row.appendChild(cell);
@@ -240,12 +240,12 @@
         }
     }
     
-    function create_new_game() {
-        create_main_contents();
+    function createNewGame() {
+        createMainContents();
 
         document.getElementById('btn').classList.add('playing');
-        is_game_over = false;
-        opened_cell_count = 0;
+        isGameOver = false;
+        openedCellCount = 0;
         document.getElementById('message').textContent = '';
     }
 

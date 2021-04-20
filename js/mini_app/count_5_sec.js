@@ -13,7 +13,7 @@
         const now = Date.now();
         if (targetTime < now) {
             timer.textContent = 'Failed.';
-            stop_to_reset();
+            stopToReset();
             return;
         }
 
@@ -27,19 +27,19 @@
         }, 10);
     }
 
-    function start_to_stop() {
+    function startToStop() {
         btn.classList.remove('start');
         btn.classList.add('stop');
         btn.textContent = 'stop';
     }
 
-    function stop_to_reset() {
+    function stopToReset() {
         btn.classList.remove('stop');
         btn.classList.add('reset');
         btn.textContent = 'reset';
     }
 
-    function reset_to_start() {
+    function resetToStart() {
         btn.classList.remove('reset');
         btn.classList.add('start');
         btn.textContent = 'start';
@@ -53,17 +53,17 @@
 
     btn.addEventListener('click', () => {
         if (btn.classList.contains('start')) {
-            start_to_stop();
+            startToStop();
 
             targetTime = new Date();
             targetTime.setSeconds(targetTime.getSeconds() + targetSec);
             countDown();
         } else if (btn.classList.contains('stop')) {
-            stop_to_reset();
+            stopToReset();
 
             clearTimeout(timeoutId);
         } else {
-            reset_to_start();
+            resetToStart();
 
             const result = document.createElement('li');
             result.textContent = timer.textContent;
