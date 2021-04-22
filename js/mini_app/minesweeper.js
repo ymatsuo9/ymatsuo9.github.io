@@ -1,14 +1,70 @@
 'use strict'
 
 {
-    const mineStr = 'X';
+    const MINE_STR = 'X';
 
-    class cell {
-        constructor(x, y, isMine, count) {
+    class Cell {
+        constructor(x, y, isMine, count, board) {
             this.x = x;
             this.y = y;
             this.isMine = isMine;
             this.count = count;
+            this.board = board;
+
+            this.element = document.createElement('div');
+            this.element.classList.add('cell');
+            this.element.classList.add('closed');
+            this.element.setAttribute('x', this.x);
+            this.element.setAttribute('y', this.y);
+
+            this.element.addEventListener('click', () => {
+                this.clickEvent();
+            });
+        }
+
+        clickEvent() {
+            if (this.board.game.isGameOver) {
+                return;
+            } else if (!this.element.classList.contains('closed')) {
+                return;
+            }
+    
+            this.element.classList.remove('closed');
+    
+            if (this.element.classList.contains('mine')) {
+                this.clickEventMine();
+                return;
+            }
+            
+            this.element.classList.add('safe-opened');
+            this.board.game.openedCellCount++;
+            if (this.count !== 0) {
+                this.element.textContent = this.count;
+            }
+    
+            if (this.board.game.safeNum === this.board.game.openedCellCount) {
+                this.board.clickEventGameClear();
+                return;
+            }
+    
+            if (this.count === 0) {
+                this.board.openNeighborPanels(this.x, this.y);
+            }
+        }
+
+        clickEventMine() {
+            this.element.textContent = MINE_STR
+            this.element.classList.add('mine-opened');
+    
+            this.board.game.message.textContent = 'Game over';
+            this.board.game.isGameOver = true;
+            this.board.game.btn.classList.remove('playing');
+        }
+    
+        openPanel() {
+            if (this.element.classList.contains('closed')) {
+                this.element.click();
+            }
         }
     }
 
@@ -32,24 +88,15 @@
                 row.classList.add('row');
                 
                 for (let wi = 0; wi < areaWidth; wi++) {
-                    const cell = document.createElement('div');
-                    cell.classList.add('cell');
-                    cell.classList.add('closed');
-                    
-                    cell.setAttribute('x', this.cells[hi][wi].x);
-                    cell.setAttribute('y', this.cells[hi][wi].y);
-                    
-                    if (this.cells[hi][wi].isMine) {
-                        cell.classList.add('mine');
+                    let cell = this.cells[hi][wi];
+
+                    if (cell.isMine) {
+                        cell.element.classList.add('mine');
                     } else {
-                        cell.setAttribute('count', this.cells[hi][wi].count);
+                        cell.element.setAttribute('count', cell.count);
                     }
                     
-                    cell.addEventListener('click', () => {
-                        this.clickEvent(cell);
-                    });
-                    
-                    row.appendChild(cell);
+                    row.appendChild(cell.element);
                 }
                 
                 this.board.appendChild(row);
@@ -78,7 +125,7 @@
                 const row = [];
                 for (let x = 0; x < this.game.areaWidth; x++) {
                     let isMine = mineIndexes.includes(x + y * this.game.areaWidth);
-                    row.push(new cell(x, y, isMine, 0));
+                    row.push(new Cell(x, y, isMine, 0, this));
                 }
                 cells.push(row);
             }
@@ -131,54 +178,15 @@
             }
         }
 
-        clickEvent(cell) {
-            if (this.game.isGameOver) {
-                return;
-            } else if (!cell.classList.contains('closed')) {
-                return;
-            }
-    
-            cell.classList.remove('closed');
-    
-            if (cell.classList.contains('mine')) {
-                this.clickEventMine(cell);
-                return;
-            }
-            
-            cell.classList.add('safe-opened');
-            this.game.openedCellCount++;
-            if (cell.getAttribute('count') !== '0') {
-                cell.textContent = cell.getAttribute('count');
-            }
-    
-            if (this.game.safeNum === this.game.openedCellCount) {
-                this.clickEventGameClear();
-                return;
-            }
-    
-            if (cell.getAttribute('count') === '0') {
-                this.openNeighborPanels(Number(cell.getAttribute('x')), Number(cell.getAttribute('y')));
-            }
-        }
-
-        clickEventMine(cell) {
-            cell.textContent = mineStr
-            cell.classList.add('mine-opened');
-    
-            this.game.message.textContent = 'Game over';
-            this.game.isGameOver = true;
-            this.game.btn.classList.remove('playing');
-        }
-    
         clickEventGameClear() {
-            for (let y = 0; y < areaHeight; y++) {
-                for (let x = 0; x < areaWidth; x++) {
-                    let cell = this.board.children[y].children[x];
-                    if (cell.classList.contains('closed') && 
-                        cell.classList.contains('mine')) {
-                            cell.classList.remove('closed');
-                            cell.classList.add('safe-opened');
-                            cell.textContent = mineStr;
+            for (let y = 0; y < this.game.areaHeight; y++) {
+                for (let x = 0; x < this.game.areaWidth; x++) {
+                    let element = this.cells[y][x].element;
+                    if (element.classList.contains('closed') && 
+                        element.classList.contains('mine')) {
+                            element.classList.remove('closed');
+                            element.classList.add('safe-opened');
+                            element.textContent = MINE_STR;
                     }
                 }
             }
@@ -191,41 +199,34 @@
         openNeighborPanels(x, y) {
             if (y !== 0) {
                 if (x !== 0) {
-                    this.openPanel(x - 1, y - 1);
+                    this.cells[y - 1][x - 1].openPanel();
                 }
     
-                this.openPanel(x, y - 1);
+                this.cells[y - 1][x].openPanel();
     
                 if (x !== (this.game.areaWidth - 1)) {
-                    this.openPanel(x + 1, y - 1);
+                    this.cells[y - 1][x + 1].openPanel();
                 }
             }
     
             if (x !== 0) {
-                this.openPanel(x - 1, y);
+                this.cells[y][x - 1].openPanel();
             }
     
             if (x !== (this.game.areaWidth - 1)) {
-                this.openPanel(x + 1, y);
+                this.cells[y][x + 1].openPanel();
             }
     
             if (y !== (this.game.areaHeight - 1)) {
                 if (x !== 0) {
-                    this.openPanel(x - 1, y + 1);
+                    this.cells[y + 1][x - 1].openPanel();
                 }
     
-                this.openPanel(x, y + 1);
+                this.cells[y + 1][x].openPanel();
     
                 if (x !== (this.game.areaWidth - 1)) {
-                    this.openPanel(x + 1, y + 1);
+                    this.cells[y + 1][x + 1].openPanel();
                 }
-            }
-        }
-
-        openPanel(x, y) {
-            const cell = this.board.children[y].children[x]
-            if (cell.classList.contains('closed')) {
-                cell.click();
             }
         }
     }
