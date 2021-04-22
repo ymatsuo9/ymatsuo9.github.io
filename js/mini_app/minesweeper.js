@@ -183,7 +183,7 @@
                 }
             }
     
-            this.game.textContent = 'Congratulations!';
+            this.game.message.textContent = 'Congratulations!';
             this.game.isGameOver = true;
             this.game.btn.classList.remove('playing');
         }
