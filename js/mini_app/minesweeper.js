@@ -36,6 +36,14 @@
             });
         }
 
+        getX() {
+            return this.x;
+        }
+
+        getY() {
+            return this.y;
+        }
+
         getIsMine() {
             return this.isMine;
         }
@@ -48,6 +56,10 @@
             if (this.board.getGame().getIsGameOver()) {
                 return;
             } else if (!this.element.classList.contains(CLASS_CLOSED)) {
+                return;
+            } else if (this.board.getGame().getOpenedCellCount() === 0 &&
+                       this.element.classList.contains(CLASS_MINE)) {
+                this.shuffle();
                 return;
             }
     
@@ -89,6 +101,10 @@
             }
         }
 
+        shuffle() {
+            this.board.getGame().shuffle(this);
+        }
+
         setNeighborCells(neighborCells) {
             this.neighborCells = neighborCells;
         }
@@ -108,6 +124,10 @@
 
         getGame() {
             return this.game;
+        }
+
+        getCells() {
+            return this.cells;
         }
 
         createBoardContents() {
@@ -281,6 +301,10 @@
             this.isGameOver = isGameOver;
         }
 
+        getOpenedCellCount() {
+            return this.openedCellCount;
+        }
+
         getBtn() {
             return this.btn;
         }
@@ -304,6 +328,14 @@
             this.openedCellCount = 0;
             this.btn.classList.add(CLASS_PLAYING);
             this.message.textContent = '';
+        }
+
+        shuffle(oldCell) {
+            let x = oldCell.getX();
+            let y = oldCell.getY();
+            this.createNewGame();
+            let newCell = this.board.getCells()[y][x];
+            newCell.getElement().click();
         }
     }
 
