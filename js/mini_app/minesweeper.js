@@ -10,6 +10,7 @@
             this.isMine = isMine;
             this.count = count;
             this.board = board;
+            this.neighborCells = undefined;
 
             this.element = document.createElement('div');
             this.element.classList.add('cell');
@@ -66,6 +67,14 @@
                 this.element.click();
             }
         }
+
+        setNeighborCells(neighborCells) {
+            this.neighborCells = neighborCells;
+        }
+
+        countUp() {
+            this.count++;
+        }
     }
 
     class Board {
@@ -107,6 +116,7 @@
             let mineIndexes = this.createMineIndexes();
             let cellsTmp = this.craeteCellsSub1(mineIndexes);
             this.createCellsSub2(cellsTmp);
+            this.createCellsSub3(cellsTmp);
             this.cells = cellsTmp;
         }
 
@@ -120,6 +130,7 @@
         }
     
         craeteCellsSub1(mineIndexes) {
+            // create default cells            
             let cells = [];
             for (let y = 0; y < this.game.areaHeight; y++) {
                 const row = [];
@@ -131,50 +142,68 @@
             }
             return cells;
         }
-    
+
         createCellsSub2(cells) {
+            // set neighbor cells
             for (let y = 0; y < this.game.areaHeight; y++) {
                 for (let x = 0; x < this.game.areaWidth; x++) {
-                    if (!cells[y][x].isMine) {
-                        continue;
+                    let neighborCells = [];
+
+                    if (y !== 0) {
+                        if (x !== 0) {
+                            neighborCells.push(cells[y - 1][x - 1]);
+                        }
+            
+                        neighborCells.push(cells[y - 1][x]);
+            
+                        if (x !== (this.game.areaWidth - 1)) {
+                            neighborCells.push(cells[y - 1][x + 1]);
+                        }
                     }
-        
-                    this.craeteCellsSub3(cells, x, y);
+            
+                    if (x !== 0) {
+                        neighborCells.push(cells[y][x - 1]);
+                    }
+            
+                    if (x !== (this.game.areaWidth - 1)) {
+                        neighborCells.push(cells[y][x + 1]);
+                    }
+            
+                    if (y !== (this.game.areaHeight - 1)) {
+                        if (x !== 0) {
+                            neighborCells.push(cells[y + 1][x - 1]);
+                        }
+            
+                        neighborCells.push(cells[y + 1][x]);
+            
+                        if (x !== (this.game.areaWidth - 1)) {
+                            neighborCells.push(cells[y + 1][x + 1]);
+                        }
+                    }
+
+                    cells[y][x].setNeighborCells(neighborCells);
                 }
             }
         }
     
-        craeteCellsSub3(cells, x, y) {
-            if (y !== 0) {
-                if (x !== 0) {
-                    cells[y - 1][x - 1].count++;
-                }
-    
-                cells[y - 1][x].count++;
-    
-                if (x !== (this.game.areaWidth - 1)) {
-                    cells[y - 1][x + 1].count++;
+        createCellsSub3(cells) {
+            // call countUp method for board cells
+            for (let y = 0; y < this.game.areaHeight; y++) {
+                for (let x = 0; x < this.game.areaWidth; x++) {
+                    let cell = cells[y][x];
+                    if (!cell.isMine) {
+                        continue;
+                    }
+        
+                    this.craeteCellsSub4(cell);
                 }
             }
+        }
     
-            if (x !== 0) {
-                cells[y][x - 1].count++;
-            }
-    
-            if (x !== (this.game.areaWidth - 1)) {
-                cells[y][x + 1].count++;
-            }
-    
-            if (y !== (this.game.areaHeight - 1)) {
-                if (x !== 0) {
-                    cells[y + 1][x - 1].count++;
-                }
-    
-                cells[y + 1][x].count++;
-    
-                if (x !== (this.game.areaWidth - 1)) {
-                    cells[y + 1][x + 1].count++;
-                }
+        craeteCellsSub4(cell) {
+            // call countUp method for neighbor cells
+            for (let i = 0; i < cell.neighborCells.length; i++) {
+                cell.neighborCells[i].countUp();
             }
         }
 
@@ -197,36 +226,10 @@
         }
     
         openNeighborPanels(x, y) {
-            if (y !== 0) {
-                if (x !== 0) {
-                    this.cells[y - 1][x - 1].openPanel();
-                }
-    
-                this.cells[y - 1][x].openPanel();
-    
-                if (x !== (this.game.areaWidth - 1)) {
-                    this.cells[y - 1][x + 1].openPanel();
-                }
-            }
-    
-            if (x !== 0) {
-                this.cells[y][x - 1].openPanel();
-            }
-    
-            if (x !== (this.game.areaWidth - 1)) {
-                this.cells[y][x + 1].openPanel();
-            }
-    
-            if (y !== (this.game.areaHeight - 1)) {
-                if (x !== 0) {
-                    this.cells[y + 1][x - 1].openPanel();
-                }
-    
-                this.cells[y + 1][x].openPanel();
-    
-                if (x !== (this.game.areaWidth - 1)) {
-                    this.cells[y + 1][x + 1].openPanel();
-                }
+            // call onclick method for neighbor cells
+            let cell = this.cells[y][x];
+            for (let i = 0; i < cell.neighborCells.length; i++) {
+                cell.neighborCells[i].openPanel();
             }
         }
     }
