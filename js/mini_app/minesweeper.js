@@ -1,7 +1,22 @@
 'use strict'
 
 {
+    const AREA_HEIGHT = 9;
+    const AREA_WIDTH = 9;
+    const MINE_NUM = 10;
+
     const MINE_STR = 'X';
+
+    const CLASS_CELL = 'cell';
+    const CLASS_CLOSED = 'closed';
+    const CLASS_MINE = 'mine';
+    const CLASS_MINE_OPENED = 'mine-opened';
+    const CLASS_PLAYING = 'playing';
+    const CLASS_ROW = 'row';
+    const CLASS_SAFE_OPENED = 'safe-opened';
+
+    const MESSAGE_GAME_OVER = 'Game over';
+    const MESSAGE_GAME_CLEAR = 'Congratulations!';
 
     class Cell {
         constructor(x, y, isMine, count, board) {
@@ -13,37 +28,43 @@
             this.neighborCells = undefined;
 
             this.element = document.createElement('div');
-            this.element.classList.add('cell');
-            this.element.classList.add('closed');
-            this.element.setAttribute('x', this.x);
-            this.element.setAttribute('y', this.y);
+            this.element.classList.add(CLASS_CELL);
+            this.element.classList.add(CLASS_CLOSED);
 
             this.element.addEventListener('click', () => {
                 this.clickEvent();
             });
         }
 
+        getIsMine() {
+            return this.isMine;
+        }
+
+        getElement() {
+            return this.element;
+        }
+
         clickEvent() {
-            if (this.board.game.isGameOver) {
+            if (this.board.getGame().getIsGameOver()) {
                 return;
-            } else if (!this.element.classList.contains('closed')) {
+            } else if (!this.element.classList.contains(CLASS_CLOSED)) {
                 return;
             }
     
-            this.element.classList.remove('closed');
+            this.element.classList.remove(CLASS_CLOSED);
     
-            if (this.element.classList.contains('mine')) {
+            if (this.element.classList.contains(CLASS_MINE)) {
                 this.clickEventMine();
                 return;
             }
             
-            this.element.classList.add('safe-opened');
-            this.board.game.openedCellCount++;
+            this.element.classList.add(CLASS_SAFE_OPENED);
+            this.board.getGame().addOpenedCellCount();
             if (this.count !== 0) {
                 this.element.textContent = this.count;
             }
     
-            if (this.board.game.safeNum === this.board.game.openedCellCount) {
+            if (this.board.getGame().isAllSafeCellOpened()) {
                 this.board.clickEventGameClear();
                 return;
             }
@@ -55,15 +76,15 @@
 
         clickEventMine() {
             this.element.textContent = MINE_STR
-            this.element.classList.add('mine-opened');
+            this.element.classList.add(CLASS_MINE_OPENED);
     
-            this.board.game.message.textContent = 'Game over';
-            this.board.game.isGameOver = true;
-            this.board.game.btn.classList.remove('playing');
+            this.board.getGame().setMessage(MESSAGE_GAME_OVER);
+            this.board.getGame().setIsGameOver(true);
+            this.board.getGame().getBtn().classList.remove(CLASS_PLAYING);
         }
     
         openPanel() {
-            if (this.element.classList.contains('closed')) {
+            if (this.element.classList.contains(CLASS_CLOSED)) {
                 this.element.click();
             }
         }
@@ -85,6 +106,10 @@
             this.board = document.getElementById('board');
         }
 
+        getGame() {
+            return this.game;
+        }
+
         createBoardContents() {
             this.createCells();
 
@@ -92,20 +117,18 @@
                 this.board.removeChild(this.board.firstChild);
             }
 
-            for (let hi = 0; hi < areaHeight; hi++) {
+            for (let hi = 0; hi < AREA_HEIGHT; hi++) {
                 const row = document.createElement('div');
-                row.classList.add('row');
+                row.classList.add(CLASS_ROW);
                 
-                for (let wi = 0; wi < areaWidth; wi++) {
+                for (let wi = 0; wi < AREA_WIDTH; wi++) {
                     let cell = this.cells[hi][wi];
 
-                    if (cell.isMine) {
-                        cell.element.classList.add('mine');
-                    } else {
-                        cell.element.setAttribute('count', cell.count);
+                    if (cell.getIsMine()) {
+                        cell.getElement().classList.add(CLASS_MINE);
                     }
                     
-                    row.appendChild(cell.element);
+                    row.appendChild(cell.getElement());
                 }
                 
                 this.board.appendChild(row);
@@ -121,9 +144,9 @@
         }
 
         createMineIndexes() {
-            let indexes = [...Array(this.game.areaHeight * this.game.areaWidth).keys()];
+            let indexes = [...Array(AREA_HEIGHT * AREA_WIDTH).keys()];
             let mineIndexes = [];
-            for (let i = 0; i < mineNum; i++) {
+            for (let i = 0; i < MINE_NUM; i++) {
                 mineIndexes.push(indexes.splice(Math.floor(Math.random() * indexes.length), 1)[0]);
             }
             return mineIndexes;
@@ -132,10 +155,10 @@
         craeteCellsSub1(mineIndexes) {
             // create default cells            
             let cells = [];
-            for (let y = 0; y < this.game.areaHeight; y++) {
+            for (let y = 0; y < AREA_HEIGHT; y++) {
                 const row = [];
-                for (let x = 0; x < this.game.areaWidth; x++) {
-                    let isMine = mineIndexes.includes(x + y * this.game.areaWidth);
+                for (let x = 0; x < AREA_WIDTH; x++) {
+                    let isMine = mineIndexes.includes(x + y * AREA_WIDTH);
                     row.push(new Cell(x, y, isMine, 0, this));
                 }
                 cells.push(row);
@@ -145,8 +168,8 @@
 
         createCellsSub2(cells) {
             // set neighbor cells
-            for (let y = 0; y < this.game.areaHeight; y++) {
-                for (let x = 0; x < this.game.areaWidth; x++) {
+            for (let y = 0; y < AREA_HEIGHT; y++) {
+                for (let x = 0; x < AREA_WIDTH; x++) {
                     let neighborCells = [];
 
                     if (y !== 0) {
@@ -156,7 +179,7 @@
             
                         neighborCells.push(cells[y - 1][x]);
             
-                        if (x !== (this.game.areaWidth - 1)) {
+                        if (x !== (AREA_WIDTH - 1)) {
                             neighborCells.push(cells[y - 1][x + 1]);
                         }
                     }
@@ -165,18 +188,18 @@
                         neighborCells.push(cells[y][x - 1]);
                     }
             
-                    if (x !== (this.game.areaWidth - 1)) {
+                    if (x !== (AREA_WIDTH - 1)) {
                         neighborCells.push(cells[y][x + 1]);
                     }
             
-                    if (y !== (this.game.areaHeight - 1)) {
+                    if (y !== (AREA_HEIGHT - 1)) {
                         if (x !== 0) {
                             neighborCells.push(cells[y + 1][x - 1]);
                         }
             
                         neighborCells.push(cells[y + 1][x]);
             
-                        if (x !== (this.game.areaWidth - 1)) {
+                        if (x !== (AREA_WIDTH - 1)) {
                             neighborCells.push(cells[y + 1][x + 1]);
                         }
                     }
@@ -188,10 +211,10 @@
     
         createCellsSub3(cells) {
             // call countUp method for board cells
-            for (let y = 0; y < this.game.areaHeight; y++) {
-                for (let x = 0; x < this.game.areaWidth; x++) {
+            for (let y = 0; y < AREA_HEIGHT; y++) {
+                for (let x = 0; x < AREA_WIDTH; x++) {
                     let cell = cells[y][x];
-                    if (!cell.isMine) {
+                    if (!cell.getIsMine()) {
                         continue;
                     }
         
@@ -208,21 +231,21 @@
         }
 
         clickEventGameClear() {
-            for (let y = 0; y < this.game.areaHeight; y++) {
-                for (let x = 0; x < this.game.areaWidth; x++) {
+            for (let y = 0; y < AREA_HEIGHT; y++) {
+                for (let x = 0; x < AREA_WIDTH; x++) {
                     let element = this.cells[y][x].element;
-                    if (element.classList.contains('closed') && 
-                        element.classList.contains('mine')) {
-                            element.classList.remove('closed');
-                            element.classList.add('safe-opened');
+                    if (element.classList.contains(CLASS_CLOSED) && 
+                        element.classList.contains(CLASS_MINE)) {
+                            element.classList.remove(CLASS_CLOSED);
+                            element.classList.add(CLASS_SAFE_OPENED);
                             element.textContent = MINE_STR;
                     }
                 }
             }
     
-            this.game.message.textContent = 'Congratulations!';
-            this.game.isGameOver = true;
-            this.game.btn.classList.remove('playing');
+            this.game.setMessage(MESSAGE_GAME_CLEAR);
+            this.game.setIsGameOver(true);
+            this.game.btn.classList.remove(CLASS_PLAYING);
         }
     
         openNeighborPanels(x, y) {
@@ -235,11 +258,8 @@
     }
 
     class Game {
-        constructor(areaHeight, areaWidth, mineNum) {
-            this.areaHeight = areaHeight;
-            this.areaWidth = areaWidth;
-            this.mineNum = mineNum;
-            this.safeNum = areaHeight * areaWidth - mineNum;
+        constructor() {
+            this.safeNum = AREA_HEIGHT * AREA_WIDTH - MINE_NUM;
             this.board = new Board(this);
             this.isGameOver = false;
             this.openedCellCount = 0;
@@ -253,18 +273,39 @@
             this.createNewGame();
         }
 
+        getIsGameOver() {
+            return this.isGameOver;
+        }
+
+        setIsGameOver(isGameOver) {
+            this.isGameOver = isGameOver;
+        }
+
+        getBtn() {
+            return this.btn;
+        }
+
+        setMessage(message) {
+            this.message.textContent = message;
+        }
+
+        addOpenedCellCount() {
+            this.openedCellCount++;
+        }
+
+        isAllSafeCellOpened() {
+            return this.safeNum === this.openedCellCount;
+        }
+
         createNewGame() {
             this.board.createBoardContents();
     
             this.isGameOver = false;
             this.openedCellCount = 0;
-            this.btn.classList.add('playing');
+            this.btn.classList.add(CLASS_PLAYING);
             this.message.textContent = '';
         }
     }
 
-    const areaHeight = 9;
-    const areaWidth = 9;
-    const mineNum = 10;
-    new Game(areaHeight, areaWidth, mineNum);
+    new Game();
 }
