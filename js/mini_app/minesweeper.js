@@ -53,7 +53,7 @@
         }
 
         clickEvent() {
-            if (this.board.getGame().getIsGameOver()) {
+            if (!this.board.getGame().getIsPlaying()) {
                 return;
             } else if (!this.element.classList.contains(CLASS_CLOSED)) {
                 return;
@@ -87,11 +87,11 @@
         }
 
         clickEventMine() {
-            this.element.textContent = MINE_STR
+            this.element.textContent = MINE_STR;
             this.element.classList.add(CLASS_MINE_OPENED);
     
             this.board.getGame().setMessage(MESSAGE_GAME_OVER);
-            this.board.getGame().setIsGameOver(true);
+            this.board.getGame().setIsPlaying(false);
             this.board.getGame().getBtn().classList.remove(CLASS_PLAYING);
         }
     
@@ -157,7 +157,7 @@
 
         createCells() {
             let mineIndexes = this.createMineIndexes();
-            let cellsTmp = this.craeteCellsSub1(mineIndexes);
+            let cellsTmp = this.createCellsSub1(mineIndexes);
             this.createCellsSub2(cellsTmp);
             this.createCellsSub3(cellsTmp);
             this.cells = cellsTmp;
@@ -172,7 +172,7 @@
             return mineIndexes;
         }
     
-        craeteCellsSub1(mineIndexes) {
+        createCellsSub1(mineIndexes) {
             // create default cells            
             let cells = [];
             for (let y = 0; y < AREA_HEIGHT; y++) {
@@ -238,12 +238,12 @@
                         continue;
                     }
         
-                    this.craeteCellsSub4(cell);
+                    this.createCellsSub4(cell);
                 }
             }
         }
     
-        craeteCellsSub4(cell) {
+        createCellsSub4(cell) {
             // call countUp method for neighbor cells
             for (let i = 0; i < cell.neighborCells.length; i++) {
                 cell.neighborCells[i].countUp();
@@ -264,7 +264,7 @@
             }
     
             this.game.setMessage(MESSAGE_GAME_CLEAR);
-            this.game.setIsGameOver(true);
+            this.game.setIsPlaying(false);
             this.game.btn.classList.remove(CLASS_PLAYING);
         }
     
@@ -281,7 +281,7 @@
         constructor() {
             this.safeNum = AREA_HEIGHT * AREA_WIDTH - MINE_NUM;
             this.board = new Board(this);
-            this.isGameOver = false;
+            this.isPlaying = true;
             this.openedCellCount = 0;
             this.btn = document.getElementById('btn');
             this.message = document.getElementById('message');
@@ -293,12 +293,12 @@
             this.createNewGame();
         }
 
-        getIsGameOver() {
-            return this.isGameOver;
+        getIsPlaying() {
+            return this.isPlaying;
         }
 
-        setIsGameOver(isGameOver) {
-            this.isGameOver = isGameOver;
+        setIsPlaying(isPlaying) {
+            this.isPlaying = isPlaying;
         }
 
         getOpenedCellCount() {
@@ -324,7 +324,7 @@
         createNewGame() {
             this.board.createBoardContents();
     
-            this.isGameOver = false;
+            this.isPlaying = true;
             this.openedCellCount = 0;
             this.btn.classList.add(CLASS_PLAYING);
             this.message.textContent = '';
