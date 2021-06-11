@@ -15,21 +15,22 @@
         </header>
 
         <h1>Tetris</h1>
-
+        
+        <canvas width="300" height="600">
+          Canvas not supported.
+        </canvas>
+        
         <div class="flexpanel">
           <div>
-            <div id="score" class="score"></div>
-            <button id="left">Left</button>
-            <button id="right">Right</button>
-          </div>
-  
-          <canvas width="400" height="800">
-            Canvas not supported.
-          </canvas>
+            <img id="left" class="move" src="../../png/mini_app/tetris/arrow_left.png" width="60" height="60">
+            <img id="right" class="move" src="../../png/mini_app/tetris/arrow_left.png" width="60" height="60" style="transform: scale(-1, 1)">
+          </div>  
 
+          <div id="score" class="score"></div>
+          
           <div>
-            <button id="rotateLeft">RotateL</button>
-            <button id="rotateRight">RotateR</button>
+            <img id="rotateLeft" class="rotate" src="../../png/mini_app/tetris/rotate_right.png" width="60" height="60" style="transform: scale(-1, 1)">
+            <img id="rotateRight" class="rotate" src="../../png/mini_app/tetris/rotate_right.png" width="60" height="60">
           </div>
         </div>
 

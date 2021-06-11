@@ -6,7 +6,7 @@
       this.MINO_PATTERN_COUNT = 7;
       this.ROW_COUNT = 20;
       this.COL_COUNT = 10;
-      this.BLOCK_SIZE = 40;
+      this.BLOCK_SIZE = 30;
       this.BORDER_WIDTH = 1;
 
       this.canvas = canvas;
@@ -22,8 +22,8 @@
       this.leftButton = document.getElementById('left');
       this.rightButton = document.getElementById('right');
 
-      this.rotateRightButton.addEventListener('click', () => this.rotateRight());
       this.rotateLeftButton.addEventListener('click', () => this.rotateLeft());
+      this.rotateRightButton.addEventListener('click', () => this.rotateRight());
       this.leftButton.addEventListener('click', () => this.pushLeft());
       this.rightButton.addEventListener('click', () => this.pushRight());
 
@@ -225,7 +225,7 @@
     drawGameOver() {
       this.ctx.font = '40px Arial';
       this.ctx.fillStyle = 'red';
-      this.ctx.fillText('GAME OVER', 80, 100);
+      this.ctx.fillText('GAME OVER', 35, 100);
     }
     
     drawScore() {
@@ -298,7 +298,7 @@
       this.x = 5 * this.game.BLOCK_SIZE;
       this.y = 0 * this.game.BLOCK_SIZE;
 
-      this.vy = 2;
+      this.vy = 4;
 
       this.rotateVal = 0;
 
