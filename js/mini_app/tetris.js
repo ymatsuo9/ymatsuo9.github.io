@@ -6,7 +6,7 @@
       this.MINO_PATTERN_COUNT = 7;
       this.ROW_COUNT = 20;
       this.COL_COUNT = 10;
-      this.BLOCK_SIZE = 30;
+      this.BLOCK_SIZE = 25;
       this.BORDER_WIDTH = 1;
 
       this.canvas = canvas;
@@ -223,9 +223,9 @@
     }
 
     drawGameOver() {
-      this.ctx.font = '40px Arial';
+      this.ctx.font = '32px Arial';
       this.ctx.fillStyle = 'red';
-      this.ctx.fillText('GAME OVER', 35, 100);
+      this.ctx.fillText('GAME OVER', 30, 100);
     }
     
     drawScore() {
@@ -298,7 +298,7 @@
       this.x = 5 * this.game.BLOCK_SIZE;
       this.y = 0 * this.game.BLOCK_SIZE;
 
-      this.vy = 4;
+      this.vy = 3;
 
       this.rotateVal = 0;
 
