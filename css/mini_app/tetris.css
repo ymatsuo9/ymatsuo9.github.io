@@ -24,6 +24,7 @@ canvas {
   min-width: 80px;
   text-align: center;
   color: white;
+  margin: 0 5px;
 }
 
 .rotate {

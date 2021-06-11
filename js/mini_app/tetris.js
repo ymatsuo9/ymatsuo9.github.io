@@ -298,7 +298,7 @@
       this.x = 5 * this.game.BLOCK_SIZE;
       this.y = 0 * this.game.BLOCK_SIZE;
 
-      this.vy = 3;
+      this.vy = 1;
 
       this.rotateVal = 0;
 
