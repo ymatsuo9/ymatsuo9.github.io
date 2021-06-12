@@ -15,15 +15,18 @@
       this.scoreDiv = document.getElementById('score');
       
       this.rotateBuffer = 0;
+      this.downBuffer = 0;
       this.moveBuffer = 0;
       
       this.rotateLeftButton = document.getElementById('rotateLeft');
       this.rotateRightButton = document.getElementById('rotateRight');
+      this.downButton = document.getElementById('down');
       this.leftButton = document.getElementById('left');
       this.rightButton = document.getElementById('right');
 
       this.rotateLeftButton.addEventListener('click', () => this.rotateLeft());
       this.rotateRightButton.addEventListener('click', () => this.rotateRight());
+      this.downButton.addEventListener('click', () => this.pushDown());
       this.leftButton.addEventListener('click', () => this.pushLeft());
       this.rightButton.addEventListener('click', () => this.pushRight());
 
@@ -59,6 +62,10 @@
       this.rotateBuffer++;
     }
 
+    pushDown() {
+      this.downBuffer++;
+    }  
+
     pushLeft() {
       this.moveBuffer--;
     }  
@@ -71,9 +78,13 @@
       this.rotateBuffer = 0;
     }
 
+    resetDownBuffer() {
+      this.downBuffer = 0;
+    }
+
     resetMoveBuffer() {
       this.moveBuffer = 0;
-    }  
+    }
 
     getNextMinoSet() {
       let minos = [];
@@ -147,8 +158,9 @@
     }
 
     update() {
-      this.currentMino.update(this.rotateBuffer, this.moveBuffer);
+      this.currentMino.update(this.rotateBuffer, this.downBuffer, this.moveBuffer);
       this.resetRotateBuffer();
+      this.resetDownBuffer();
       this.resetMoveBuffer();
 
       if (this.currentMino.getMissedStatus()) {
@@ -336,8 +348,12 @@
       return this.pattern;
     }
 
-    update(rotateBuffer, moveBuffer) {
+    update(rotateBuffer, downBuffer, moveBuffer) {
       if (this.minoStatus === this.minoConstant.STATUS_CURRENT) {
+        let previousRotateVal = this.rotateVal;
+        while ((this.rotateVal + rotateBuffer) < 0) {
+          rotateBuffer += 4;
+        }
         this.rotateVal = (this.rotateVal + rotateBuffer) % 4;
         this.rotate();
         let isAllRotatable = true;
@@ -348,7 +364,7 @@
         }
         if (!isAllRotatable) {
           // reset mino's rotate value
-          this.rotateVal = (this.rotateVal - rotateBuffer) % 4;
+          this.rotateVal = previousRotateVal;
           this.rotate();
         }
 
@@ -387,6 +403,8 @@
           if (!this.isMissed) {
             this.game.addScore(1);
           }
+        } else if (downBuffer > 0) {
+          this.update(0, 1, 0);
         }
       }
     }
@@ -651,8 +669,8 @@
       this.blocks[1].setOffsetY(2 * this.game.BLOCK_SIZE);
       this.blocks[2].setOffsetX(0);
       this.blocks[2].setOffsetY(this.game.BLOCK_SIZE);
-      this.blocks[3].setOffsetX(this.game.BLOCK_SIZE);
-      this.blocks[3].setOffsetY(- this.game.BLOCK_SIZE);
+      this.blocks[3].setOffsetX(- this.game.BLOCK_SIZE);
+      this.blocks[3].setOffsetY(this.game.BLOCK_SIZE);
     }
 
     rotate3() {
@@ -961,7 +979,7 @@
         return false;
       }
 
-      if (this.game.ROW_COUNT <= row) {
+      if (row < 0 || this.game.ROW_COUNT <= row) {
         return false;
       }  
 
