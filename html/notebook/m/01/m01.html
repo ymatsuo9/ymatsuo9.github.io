@@ -37,6 +37,11 @@
                 E[X] = \sum_{i=1}^\infty x_{i}P(X=x_{i})
                 \]
             </div>
+            <div>
+                \[
+                E[aX + bY] = aE[X] + bE[Y]
+                \]
+            </div>
         </p>
 
         <p>
@@ -52,6 +57,16 @@
             <div>
                 \[
                 V[X] = E[X^2] - (E[X])^2
+                \]
+            </div>
+            <div>
+                \[
+                V[X + b] = V(X)
+                \]
+            </div>
+            <div>
+                \[
+                V[aX] = a^2 V(X)
                 \]
             </div>
         </p>
@@ -75,7 +90,7 @@
             </ul>
             <div>
                 \[
-                M_x(t) := E(e^{tX}), \quad t \in\Bbb R
+                M_X(t) := E(e^{tX}), \quad t \in\Bbb R
                 \]
             </div>
             <div>
@@ -98,6 +113,31 @@
             <div>
                 \[
                 V[X] = np(1 - p)
+                \]
+            </div>
+        </p>
+
+        <p>
+            <div><a href="https://ja.wikipedia.org/wiki/%E6%8C%87%E6%95%B0%E5%88%86%E5%B8%83" target="_blank">指数分布</a></div>
+            <ul style="list-style: none;">
+                <li>指数分布は台 $(0, \infty)$ を持ち、母数 $\lambda \gt 0$ に対して確率密度関数が</li>
+            </ul>
+            <div>
+                \[
+                f(x; \lambda) = \lambda e^{- \lambda x}
+                \]
+            </div>
+            <ul style="list-style: none;">
+                <li>で与えられる。</li>
+            </ul>
+            <div>
+                \[
+                E(x) = \frac{1}{\lambda}
+                \]
+            </div>
+            <div>
+                \[
+                V(x) = \frac{1}{\lambda^2}
                 \]
             </div>
         </p>
