@@ -1,0 +1,34 @@
+h1 {
+    min-height: 1em;
+    margin-top: 72px;
+    margin-bottom: 18px;
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: .04em;
+    font-feature-settings: "palt" 1;
+    font-size: 2rem;
+}
+
+h2 {
+    margin-bottom: -18px;
+    font-weight: 700;
+    font-feature-settings: "palt" 1;
+    line-height: 36px;
+    letter-spacing: .04em;
+}
+
+p {
+    margin-top: 36px;
+    margin-bottom: 36px;
+}
+
+.container {
+    width: 620px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.text-body {
+    font-size: 1.125rem;
+    line-height: 36px;
+}
