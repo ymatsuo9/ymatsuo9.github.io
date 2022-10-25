@@ -22,10 +22,12 @@ p {
     margin-bottom: 36px;
 }
 
-.container {
-    width: 620px;
-    margin-right: auto;
-    margin-left: auto;
+@media (min-width: 620px) {
+    .container {
+        width: 620px;
+        margin-right: auto;
+        margin-left: auto;
+    }
 }
 
 .text-body {
