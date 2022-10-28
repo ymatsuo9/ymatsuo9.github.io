@@ -241,6 +241,21 @@
                 \]
             </div>
         </p>
+
+        <p>
+            <div class="text-body"><a href="https://ja.wikipedia.org/wiki/%E4%B8%AD%E5%BF%83%E6%A5%B5%E9%99%90%E5%AE%9A%E7%90%86" target="_blank">中心極限定理</a></div>
+            <ul class="text-body" style="list-style: none;">
+                <li>期待値 $\mu$ と分散 $\sigma^2$ を持つ独立同分布に従う確率変数列 $X_1, X_2, ...$ に対し $S_n := \sum_{k=1}^n X_k$ とおくと、</li>
+            </ul>
+            <div class="text-body">
+                \[
+                P \left( \frac{S_n - n\mu}{\sqrt{n} \sigma} \le \alpha \right) \rightarrow \frac{1}{\sqrt{2\pi}} \int_{-\infty}^{\alpha} e^{- \frac{x^2}{2} } dx \quad (n \rightarrow \infty)
+                \]
+            </div>
+            <ul class="text-body" style="list-style: none;">
+                <li>つまり、独立同分布に従う確率変数列の部分和を標準化すると、期待値0、分散1の正規分布 $N(0, 1)$ に分布収束する。</li>
+            </ul>
+        </p>        
     </div>
 </body>
 </html>
