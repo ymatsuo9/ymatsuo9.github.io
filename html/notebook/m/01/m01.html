@@ -170,6 +170,40 @@
                 <li>（参考：<a href="https://ja.wikipedia.org/wiki/%E5%88%86%E6%95%A3_(%E7%A2%BA%E7%8E%87%E8%AB%96)" target="_blank">分散</a>）</li>
             </ul>
         </p>
+
+        <p>
+            <div class="text-body"><a href="https://ja.wikipedia.org/wiki/%E3%83%9D%E3%82%A2%E3%82%BD%E3%83%B3%E5%88%86%E5%B8%83" target="_blank">ポアソン分布</a></div>
+            <ul class="text-body" style="list-style: none;">
+                <li>ある離散的な事象について、ポアソン分布は所与の時間内での生起回数の確率を示し、指数分布は生起間隔の確率を示す。</li>
+            </ul>
+            <ul class="text-body" style="list-style: none;">
+                <li>定義 $\lambda \gt 0$ に対し、0以上の整数を値にとる確率変数 $X$ が</li>
+            </ul>
+            <div class="text-body">
+                \[
+                P(X=k) = \frac{\lambda^k e^{-\lambda}}{k!}
+                \]
+            </div>
+            <ul class="text-body" style="list-style: none;">
+                <li>を満たすとき、確率変数 $X$ は母数 $\lambda$ のポアソン分布に従うという。</li>
+            </ul>
+            <div class="text-body">
+                \[
+                E[X]=\lambda
+                \]
+            </div>
+            <div class="text-body">
+                \[
+                V[X]=\lambda
+                \]
+            </div>
+            <div class="text-body">
+                \[
+                M_X(t) = E\left[ e^{tX} \right] = \sum_{k=0}^\infty e^{tk} P(X=k) = \sum_{k=0}^\infty e^{tk} \frac{\lambda^k e^{-\lambda}}{k!} = e^{\lambda (e^t - 1)}
+                \]
+            </div>
+        </p>
+
     </div>
 </body>
 </html>
