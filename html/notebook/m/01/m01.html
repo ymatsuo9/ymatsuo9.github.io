@@ -175,8 +175,6 @@
             <div class="text-body"><a href="https://ja.wikipedia.org/wiki/%E3%83%9D%E3%82%A2%E3%82%BD%E3%83%B3%E5%88%86%E5%B8%83" target="_blank">ポアソン分布</a></div>
             <ul class="text-body" style="list-style: none;">
                 <li>ある離散的な事象について、ポアソン分布は所与の時間内での生起回数の確率を示し、指数分布は生起間隔の確率を示す。</li>
-            </ul>
-            <ul class="text-body" style="list-style: none;">
                 <li>定義 $\lambda \gt 0$ に対し、0以上の整数を値にとる確率変数 $X$ が</li>
             </ul>
             <div class="text-body">
@@ -204,6 +202,45 @@
             </div>
         </p>
 
+        <p>
+            <div class="text-body"><a href="https://ja.wikipedia.org/wiki/%E6%AD%A3%E8%A6%8F%E5%88%86%E5%B8%83" target="_blank">正規分布</a></div>
+            <ul class="text-body" style="list-style: none;">
+                <li>確率論や統計学で用いられる連続的な変数に関する確率分布の一つ。データが平均値の付近に集積するような分布を表す。</li>
+                <li>平均を $\mu$ , 分散を $\sigma^2 \gt 0$ とする（1次元）正規分布とは、確率密度関数が次の形</li>
+            </ul>
+            <div class="text-body">
+                \[
+                f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp \left( -\frac{(x-\mu)^2}{2\sigma^2} \right) \quad (x \in\Bbb R)
+                \]
+            </div>
+            <ul class="text-body" style="list-style: none;">
+                <li>で与えられる確率分布のことである。この分布を $N(\mu, \sigma^2)$ と表す。</li>
+                <li>特に $\mu = 0, \sigma^2 = 1$ のとき、この分布は（1次元）標準正規分布と呼ばれる。つまり標準正規分布 $N(0, 1)$ は</li>
+            </ul>
+            <div class="text-body">
+                \[
+                f(x) = \frac{1}{\sqrt{2\pi}} \exp \left( -\frac{x^2}{2} \right)
+                \]
+            </div>
+            <ul class="text-body" style="list-style: none;">
+                <li>なる確率密度関数を持つ確率分布として与えられる。</li>
+            </ul>
+            <div class="text-body">
+                \[
+                E[X] = \mu
+                \]
+            </div>
+            <div class="text-body">
+                \[
+                V[X] = \sigma^2
+                \]
+            </div>
+            <div class="text-body">
+                \[
+                M_X(t) = \exp \left( \mu t + \frac{\sigma^2 t^2}{2} \right)
+                \]
+            </div>
+        </p>
     </div>
 </body>
 </html>
